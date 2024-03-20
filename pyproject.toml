@@ -1,0 +1,25 @@
+[project]
+name = "tasks"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "444chak", email = "444chak@gmail.com"},
+]
+dependencies = [
+    "click>=8.1.7",
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.scripts]
+tasks = "tasks:cli" # reference to cli() function in the __init__.py file in tasks package
+hello = "tasks:hello" # reference to hello() function in the __init__.py file in tasks package
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
