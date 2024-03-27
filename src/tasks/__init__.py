@@ -50,6 +50,7 @@ def add(task: str, end_date: str):
     TASK is the description of the task.
     END_DATE is the end date of the task in the format dd/mm/yyyy."""
 
+    # TODO: faisable avec une fonction de click
     if not re.match(r"\d{2}\/\d{2}\/\d{4}", end_date):
         click.echo("The date must be in the format dd/mm/yyyy.")
         return
