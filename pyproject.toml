@@ -13,8 +13,7 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-tasks = "tasks:cli" # reference to cli() function in the __init__.py file in tasks package
-hello = "tasks:hello" # reference to hello() function in the __init__.py file in tasks package
+tasks = "views:cli" # reference to cli() function in the __init__.py file in tasks (views) package
 
 [build-system]
 requires = ["pdm-backend"]

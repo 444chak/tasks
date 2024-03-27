@@ -2,7 +2,7 @@
 
 from datetime import date
 import sqlite3
-import click
+# import click
 
 DATABASE = sqlite3.connect("database.db")
 
@@ -10,11 +10,11 @@ DATABASE = sqlite3.connect("database.db")
 
 def init() -> None:
     """Initialize the database."""
-    DATABASE.execute(
-        "CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY, task TEXT, end_date DATE, done BOOLEAN)"
+    DATABASE.execute('''CREATE TABLE IF NOT EXISTS
+                      tasks (id INTEGER PRIMARY KEY, task TEXT, end_date DATE, done BOOLEAN)'''
     )
     DATABASE.commit()
-    click.echo("Initialized the database.")
+    print("Initialized the database.")
 
 if DATABASE.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall() == []:
     init()
@@ -36,7 +36,7 @@ def add_task(task: str, end_date: date, done: bool = False) -> bool:
         DATABASE.commit()
         return True
     except sqlite3.Error as e:
-        click.echo(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
         return False
 
 def remove_task(task_id: int) -> bool:
@@ -49,7 +49,7 @@ def remove_task(task_id: int) -> bool:
         DATABASE.commit()
         return True
     except sqlite3.Error as e:
-        click.echo(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
         return False
 
 def update_task(task_id: int, done: bool) -> bool:
@@ -59,7 +59,7 @@ def update_task(task_id: int, done: bool) -> bool:
         DATABASE.commit()
         return True
     except sqlite3.Error as e:
-        click.echo(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
         return False
 
 def get_task(task_id: int) -> tuple:

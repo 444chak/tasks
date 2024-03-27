@@ -2,7 +2,7 @@
 import csv
 import os
 import click
-import database
+import models
 
 EXPORT_PATH = "exports/"
 
@@ -18,9 +18,9 @@ def export_tasks(file='tasks.csv', tasks=None):
             return
 
     if len(tasks) == 0:
-        tasks = database.tasks_list()
+        tasks = models.tasks_list()
     else:
-        tasks = [database.get_task(task) for task in tasks]
+        tasks = [models.get_task(task) for task in tasks]
 
 
     file = f"{EXPORT_PATH}{file}"
@@ -54,6 +54,6 @@ def import_tasks(file='tasks.csv'):
 
     for task in tasks:
         print(task[1:])
-        database.add_task(*task[1:])
+        models.add_task(*task[1:])
 
     click.echo(f"Tasks imported from {file}")
