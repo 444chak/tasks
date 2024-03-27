@@ -45,19 +45,13 @@ def todo():
 
 @cli.command()
 @click.option("-t", "--task", prompt="Your task", help="The task to remember.")
-@click.option("-d", "--end_date", prompt="End date", help="The end date of the task.")
+@click.option("-d", "--end_date", prompt="End date", help="The end date of the task.", type=click.DateTime(["%d/%m/%Y"]))
 def add(task: str, end_date: str):
     """Add a task.
     TASK is the description of the task.
     END_DATE is the end date of the task in the format dd/mm/yyyy."""
 
-    # TODO: faisable avec une fonction de click
-    if not re.match(r"\d{2}\/\d{2}\/\d{4}", end_date):
-        click.echo("The date must be in the format dd/mm/yyyy.")
-        return
-    day, month, year = map(int, end_date.split("/"))
-    end_date = date(year, month, day)
-    if end_date < date.today():
+    if end_date.date() < date.today():
         click.echo("The date must be in the future.")
         return
 
