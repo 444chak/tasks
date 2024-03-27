@@ -8,7 +8,7 @@ DATABASE = sqlite3.connect("database.db")
 
 
 
-def init():
+def init() -> None:
     """Initialize the database."""
     DATABASE.execute(
         "CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY, task TEXT, end_date DATE, done BOOLEAN)"
@@ -19,19 +19,19 @@ def init():
 if DATABASE.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall() == []:
     init()
 
-def show_tables():
+def show_tables() -> list:
     """Show all tables in the database."""
     cursor = DATABASE.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     return cursor.fetchall()
 
 
-def add_task(task: str, end_date: date):
+def add_task(task: str, end_date: date, done: bool = False) -> bool:
     """Add a task to the database."""
     try:
         DATABASE.execute(
             "INSERT INTO tasks (task, end_date, done) VALUES (?, ?, ?)",
-            (task, end_date, False),
+            (task, end_date, done),
         )
         DATABASE.commit()
         return True
@@ -39,7 +39,7 @@ def add_task(task: str, end_date: date):
         click.echo(f"An error occurred: {e}")
         return False
 
-def remove_task(task_id: int):
+def remove_task(task_id: int) -> bool:
     """Remove a task from the database."""
     try:
         cursor = DATABASE.cursor()
@@ -52,7 +52,7 @@ def remove_task(task_id: int):
         click.echo(f"An error occurred: {e}")
         return False
 
-def update_task(task_id: int, done: bool):
+def update_task(task_id: int, done: bool) -> bool:
     """Update the done status of a task."""
     try:
         DATABASE.execute("UPDATE tasks SET done=? WHERE id=?", (done, task_id))
@@ -62,13 +62,13 @@ def update_task(task_id: int, done: bool):
         click.echo(f"An error occurred: {e}")
         return False
 
-def get_task(task_id: int):
+def get_task(task_id: int) -> tuple:
     """Get a task from the database."""
     cursor = DATABASE.cursor()
     cursor.execute("SELECT * FROM tasks WHERE id=?", (task_id,))
     return cursor.fetchone()
 
-def tasks_list():
+def tasks_list() -> list:
     """Show all tasks in the database."""
     cursor = DATABASE.cursor()
     cursor.execute("SELECT * FROM tasks")

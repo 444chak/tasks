@@ -9,6 +9,8 @@ EXPORT_PATH = "exports/"
 
 def export_tasks(file='tasks.csv', tasks=None):
     """Export tasks to a CSV file."""
+    if file != "tasks.csv" and not file.endswith(".csv"):
+        file += ".csv"
 
     if os.path.isfile(f"{EXPORT_PATH}//{file}"):
         click.echo("File already exists. Do you want to overwrite it? (y/n)")
@@ -34,3 +36,24 @@ def export_tasks(file='tasks.csv', tasks=None):
             writer.writerows(tasks)
 
     click.echo(f"Tasks exported to {file}")
+
+
+def import_tasks(file='tasks.csv'):
+    """Import tasks from a CSV file."""
+    if file != "tasks.csv" and not file.endswith(".csv"):
+        file += ".csv"
+
+    file = f"{EXPORT_PATH}{file}"
+    if not os.path.isfile(file):
+        click.echo(f"File {file} does not exist.")
+        return
+
+    with open(file, "r", newline="", encoding='utf-8') as f:
+        reader = csv.reader(f)
+        tasks = list(reader)
+
+    for task in tasks:
+        print(task[1:])
+        database.add_task(*task[1:])
+
+    click.echo(f"Tasks imported from {file}")

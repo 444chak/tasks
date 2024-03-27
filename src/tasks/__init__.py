@@ -66,38 +66,71 @@ def add(task: str, end_date: str):
         click.echo(f"Task: {task}, End date: {end_date.strftime('%d/%m/%Y')}")
 
 @cli.command()
-@click.argument("task_id", type=int, required=True)
+@click.argument("task_id", type=int, required=True, nargs=-1)
 def remove(task_id: int):
     """Remove a task.
+    USAGE: remove TASK_ID [TASK_ID...]
+
     TASK_ID is the number of the task to remove.
     If the task does not exist, an error message will be displayed.
     For knowing the task_id, use the list command."""
+    if len(task_id) > 1:
+        for task in task_id:
+            if database.remove_task(task):
+                click.echo(f"Task {task} removed ! ✅")
+            else:
+                click.echo(f"Task {task} not found ! ❌")
+        return
+    else:
+        task_id = task_id[0]
     if database.remove_task(task_id):
         click.echo(f"Task {task_id} removed ! ✅")
     else:
         click.echo(f"Task {task_id} not found ! ❌")
 
 @cli.command()
-@click.argument("task_id", type=int, required=True)
+@click.argument("task_id", type=int, required=True, nargs=-1)
 def done(task_id: int):
     """Mark a task as done.
+    USAGE: done TASK_ID
     TASK_ID is the number of the task to mark as done.
     If the task does not exist, an error message will be displayed.
     For knowing the task_id, use the list command."""
+    if len(task_id) > 1:
+        for task in task_id:
+            task = Task(*database.get_task(task))
+            if task:
+                task.check()
+                click.echo(f"Task {task_id} updated ! ✅")
+            else:
+                click.echo(f"Task {task_id} not found ! ❌")
+        return
+    else:
+        task_id = task_id[0]
     task = Task(*database.get_task(task_id))
     if task:
         task.check()
         click.echo(f"Task {task_id} updated ! ✅")
+    else:
+        click.echo(f"Task {task_id} not found ! ❌")
 
 @cli.command()
 @click.option("-f", "--file", help="The file to export to.", default="tasks.csv")
-@click.argument("tasks", type=int, nargs=-1)
-
-def export(file: str, tasks):
+@click.argument("tasks", type=int, nargs=-1, required=False)
+def texport(file: str, tasks):
     """Export tasks to a file.
+    USAGE: texport FILE [TASKS...]
     FILE is the file to export to.
     TASKS are the tasks to export. If not specified, all tasks will be exported."""
     if not tasks:
         click.echo("No tasks specified. Exporting all tasks.")
     print(file)
     tasks_csv.export_tasks(file, tasks)
+
+@cli.command()
+@click.option("-f", "--file", help="The file to import from.", required=True)
+def timport(file: str):
+    """Import tasks from a file.
+    USAGE: timport FILE
+    FILE is the file to import from."""
+    tasks_csv.import_tasks(file)
