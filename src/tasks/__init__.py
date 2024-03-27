@@ -5,6 +5,7 @@ from datetime import date
 from dataclasses import dataclass
 import click
 import database
+import tasks_csv
 
 
 
@@ -87,3 +88,16 @@ def done(task_id: int):
     if task:
         task.check()
         click.echo(f"Task {task_id} updated ! ✅")
+
+@cli.command()
+@click.option("-f", "--file", help="The file to export to.", default="tasks.csv")
+@click.argument("tasks", type=int, nargs=-1)
+
+def export(file: str, tasks):
+    """Export tasks to a file.
+    FILE is the file to export to.
+    TASKS are the tasks to export. If not specified, all tasks will be exported."""
+    if not tasks:
+        click.echo("No tasks specified. Exporting all tasks.")
+    print(file)
+    tasks_csv.export_tasks(file, tasks)
