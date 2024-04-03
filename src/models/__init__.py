@@ -1,75 +1,72 @@
-"""Database module for the application."""
+"""This module contains the database models."""
 
 from datetime import date
-import sqlite3
-# import click
+import sqlalchemy
 
-DATABASE = sqlite3.connect("database.db")
+engine = sqlalchemy.create_engine("sqlite:///database.db")
+metadata = sqlalchemy.MetaData()
 
+def create_database():
+    """Create the database."""
+    metadata.create_all(engine)
 
-
-def init() -> None:
-    """Initialize the database."""
-    DATABASE.execute('''CREATE TABLE IF NOT EXISTS
-                      tasks (id INTEGER PRIMARY KEY, task TEXT, end_date DATE, done BOOLEAN)'''
-    )
-    DATABASE.commit()
-    print("Initialized the database.")
-
-if DATABASE.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall() == []:
-    init()
-
-def show_tables() -> list:
-    """Show all tables in the database."""
-    cursor = DATABASE.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    return cursor.fetchall()
-
+tasks_table = sqlalchemy.Table(
+    "tasks",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("task", sqlalchemy.String),
+    sqlalchemy.Column("end_date", sqlalchemy.Date),
+    sqlalchemy.Column("done", sqlalchemy.Boolean),
+)
 
 def add_task(task: str, end_date: date, done: bool = False) -> bool:
-    """Add a task to the database."""
-    try:
-        DATABASE.execute(
-            "INSERT INTO tasks (task, end_date, done) VALUES (?, ?, ?)",
-            (task, end_date, done),
-        )
-        DATABASE.commit()
+    """Add a task to the database.
+        task: str: The description of the task.
+        end_date: date: The end date of the task.
+        done: bool: The status of the task.
+    """
+    stmt = tasks_table.insert().values(
+        task=task, end_date=end_date, done=done
+    )
+    with engine.begin() as connection:
+        connection.execute(stmt)
         return True
-    except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
-        return False
+
 
 def remove_task(task_id: int) -> bool:
-    """Remove a task from the database."""
-    try:
-        cursor = DATABASE.cursor()
-        cursor.execute("DELETE FROM tasks WHERE id=?", (task_id,))
-        if cursor.rowcount == 0:
-            return False
-        DATABASE.commit()
-        return True
-    except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
-        return False
+    """Remove a task from the database.
+        task_id: int: The id of the task to remove.
+    """
+    stmt = tasks_table.delete().where(tasks_table.c.id == task_id)
+    with engine.begin() as connection:
+        result = connection.execute(stmt)
+        return result.rowcount > 0
+
 
 def update_task(task_id: int, done: bool) -> bool:
-    """Update the done status of a task."""
-    try:
-        DATABASE.execute("UPDATE tasks SET done=? WHERE id=?", (done, task_id))
-        DATABASE.commit()
-        return True
-    except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
-        return False
+    """Update the done status of a task.
+        task_id: int: The id of the task to update.
+        done: bool: The new status of the task.
+    """
+    stmt = tasks_table.update().where(tasks_table.c.id == task_id).values(done=done)
+    with engine.begin() as connection:
+        result = connection.execute(stmt)
+        return result.rowcount > 0
+
 
 def get_task(task_id: int) -> tuple:
-    """Get a task from the database."""
-    cursor = DATABASE.cursor()
-    cursor.execute("SELECT * FROM tasks WHERE id=?", (task_id,))
-    return cursor.fetchone()
+    """Get a task from the database.
+        task_id: int: The id of the task to get.
+    """
+    stmt = tasks_table.select().where(tasks_table.c.id == task_id)
+    with engine.begin() as connection:
+        result = connection.execute(stmt)
+        return result.fetchone()
+
 
 def tasks_list() -> list:
     """Show all tasks in the database."""
-    cursor = DATABASE.cursor()
-    cursor.execute("SELECT * FROM tasks")
-    return cursor.fetchall()
+    stmt = tasks_table.select()
+    with engine.begin() as connection:
+        result = connection.execute(stmt)
+        return result.fetchall()

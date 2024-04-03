@@ -10,14 +10,10 @@ import services
 @dataclass
 class Task:
     """A simple class to represent a task."""
-
     id: int
     task: str
     end_date: date
     done: bool = False
-
-    def __post_init__(self):
-        self.end_date = date.fromisoformat(self.end_date)
 
     def __str__(self):
         status = "[X]" if self.done else "[ ]"
