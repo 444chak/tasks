@@ -11,6 +11,7 @@ Nedd to install :
 - pdm (https://pdm-project.org/latest/)
 - click >= 8.1.7 (https://click.palletsprojects.com/en/8.0.x/)
 - python >= 3.11
+- SQLAlchemy >= 2.0.0 (https://www.sqlalchemy.org/)
 
 Then run the following command to install the dependencies:
 ```bash
