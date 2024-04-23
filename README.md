@@ -1,4 +1,4 @@
->B2 Project - Tasks Manager - Paris-Saclay University
+>B2 Project - Tasks Manager - Paris-Saclay University - 2024
 
 # What is this project about?
 
