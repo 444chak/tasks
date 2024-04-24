@@ -1,6 +1,6 @@
 [project]
 name = "tasks"
-version = "0.1.0"
+version = "0.2.0"
 description = "Todo list application"
 authors = [
     {name = "444chak", email = "444chak@gmail.com"},
@@ -15,8 +15,10 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-tasks = "views:cli" # reference to cli() function in the __init__.py file in tasks (views) package
-toudou = "views:cli" # reference to cli() function in the __init__.py file in tasks (views) package
+tasks = "views.cli:cli" # reference to cli() function in the __init__.py file in tasks (views) package
+toudou = "views.cli:cli" # reference to cli() function in the __init__.py file in tasks (views) package
+web = "views.web:run" # reference to __init__.py file in web package who launches the web app using Flask 
+webd = "views.web:rund" # reference to __init__.py file in web package who launches the web app using Flask in debug mode
 
 [build-system]
 requires = ["pdm-backend"]
@@ -25,3 +27,4 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 distribution = true
+

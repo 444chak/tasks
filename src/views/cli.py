@@ -1,4 +1,4 @@
-"""The main module for the tasks package."""
+"""The main module for the tasks CLI."""
 import inspect
 from datetime import date, datetime
 from dataclasses import dataclass
