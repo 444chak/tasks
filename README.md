@@ -12,6 +12,7 @@ Nedd to install :
 - click >= 8.1.7 (https://click.palletsprojects.com/en/8.0.x/)
 - python >= 3.11
 - SQLAlchemy >= 2.0.0 (https://www.sqlalchemy.org/)
+- Flask >= 3.0.3 (https://flask.palletsprojects.com/en/3.0.x/)
 
 Then run the following command to install the dependencies:
 ```bash
