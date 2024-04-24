@@ -1,7 +1,8 @@
 """The main module for the tasks package."""
-
+import inspect
 from datetime import date, datetime
 from dataclasses import dataclass
+from sqlalchemy.exc import OperationalError
 import click
 import models
 import services
@@ -29,13 +30,22 @@ class Task:
 def cli():
     """A simple CLI for managing tasks."""
 
+@cli.command()
+def init_db():
+    """Create the database."""
+    click.echo("Creating the database...")
+    models.create_database()
+    click.echo("Database created ! ✅")
 
 @cli.command()
 def todo():
     """List all tasks."""
-    click.echo("Tasks:")
-    for task in models.tasks_list():
-        click.echo(Task(*task))
+    try:
+        click.echo("Tasks:")
+        for task in models.tasks_list():
+            click.echo(Task(*task))
+    except OperationalError:
+        error_db()
 
 
 @cli.command()
@@ -57,9 +67,14 @@ def add(task: str, end_date: datetime):
         click.echo("The date must be in the future.")
         return
 
-    if models.add_task(task, end_date):
-        click.echo("Task added ! ✅")
-        click.echo(f"Task: {task}, End date: {end_date.strftime('%d/%m/%Y')}")
+    try:
+        if models.add_task(task, end_date):
+            click.echo("Task added ! ✅")
+            click.echo(f"Task: {task}, End date: {end_date.strftime('%d/%m/%Y')}")
+
+    except OperationalError:
+        error_db()
+
 
 
 @cli.command()
@@ -71,19 +86,22 @@ def remove(task_id: int):
     TASK_ID is the number of the task to remove.
     If the task does not exist, an error message will be displayed.
     For knowing the task_id, use the list command."""
-    if len(task_id) > 1:
-        for task in task_id:
-            if models.remove_task(task):
-                click.echo(f"Task {task} removed ! ✅")
-            else:
-                click.echo(f"Task {task} not found ! ❌")
-        return
-    else:
-        task_id = task_id[0]
-    if models.remove_task(task_id):
-        click.echo(f"Task {task_id} removed ! ✅")
-    else:
-        click.echo(f"Task {task_id} not found ! ❌")
+    try:
+        if len(task_id) > 1:
+            for task in task_id:
+                if models.remove_task(task):
+                    click.echo(f"Task {task} removed ! ✅")
+                else:
+                    click.echo(f"Task {task} not found ! ❌")
+            return
+        else:
+            task_id = task_id[0]
+        if models.remove_task(task_id):
+            click.echo(f"Task {task_id} removed ! ✅")
+        else:
+            click.echo(f"Task {task_id} not found ! ❌")
+    except OperationalError:
+        error_db()
 
 
 @cli.command()
@@ -94,23 +112,26 @@ def done(task_id: int):
     TASK_ID is the number of the task to mark as done.
     If the task does not exist, an error message will be displayed.
     For knowing the task_id, use the list command."""
-    if len(task_id) > 1:
-        for task in task_id:
-            task = Task(*models.get_task(task))
-            if task:
-                task.check()
-                click.echo(f"Task {task_id} updated ! ✅")
-            else:
-                click.echo(f"Task {task_id} not found ! ❌")
-        return
-    else:
-        task_id = task_id[0]
-    task = Task(*models.get_task(task_id))
-    if task:
-        task.check()
-        click.echo(f"Task {task_id} updated ! ✅")
-    else:
-        click.echo(f"Task {task_id} not found ! ❌")
+    try:
+        if len(task_id) > 1:
+            for task in task_id:
+                task = Task(*models.get_task(task))
+                if task:
+                    task.check()
+                    click.echo(f"Task {task_id} updated ! ✅")
+                else:
+                    click.echo(f"Task {task_id} not found ! ❌")
+            return
+        else:
+            task_id = task_id[0]
+        task = Task(*models.get_task(task_id))
+        if task:
+            task.check()
+            click.echo(f"Task {task_id} updated ! ✅")
+        else:
+            click.echo(f"Task {task_id} not found ! ❌")
+    except OperationalError:
+        error_db()
 
 
 @cli.command()
@@ -123,8 +144,10 @@ def texport(file: str, tasks):
     TASKS are the tasks to export. If not specified, all tasks will be exported."""
     if not tasks:
         click.echo("No tasks specified. Exporting all tasks.")
-    print(file)
-    services.export_tasks(file, tasks)
+    try:
+        services.export_tasks(file, tasks)
+    except OperationalError:
+        error_db()
 
 
 @cli.command()
@@ -133,4 +156,17 @@ def timport(file: str):
     """Import tasks from a file.
     USAGE: timport FILE
     FILE is the file to import from."""
-    services.import_tasks(file)
+    try:
+        services.import_tasks(file)
+    except OperationalError:
+        error_db()
+
+
+def error_db():
+    """Display an error message if the database is not initialized."""
+    click.echo(
+        click.style("ERROR: ", fg="red", bold=True)
+        + "A database error occurred with "
+        + click.style(inspect.stack()[1][3], fg="yellow", bold=True) + ".")
+    click.echo("Do you have the database initialized ?")
+    click.echo("You can do it by running the command: init_db")
