@@ -1,7 +1,7 @@
 [project]
 name = "tasks"
 version = "0.1.0"
-description = "Default template for PDM package"
+description = "Todo list application"
 authors = [
     {name = "444chak", email = "444chak@gmail.com"},
 ]
@@ -16,6 +16,7 @@ license = {text = "MIT"}
 
 [project.scripts]
 tasks = "views:cli" # reference to cli() function in the __init__.py file in tasks (views) package
+toudou = "views:cli" # reference to cli() function in the __init__.py file in tasks (views) package
 
 [build-system]
 requires = ["pdm-backend"]
