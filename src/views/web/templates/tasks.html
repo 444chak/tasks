@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='tasks.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% include 'partials/header.html' %}
+
+    <p>{{tasks}}</p>
+    <div class="tasks">
+        <table class="tasks-list">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>End date</th>
+                    <th>Done</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{task.id}}</td>
+                    <td>{{task.title}}</td>
+                    <td>{{task.end_date}}</td>
+                    <td>{% if task.done %}X:{% endif %}</td>
+                    <td class="actions">
+                        <button onclick="window.location.href='/tasks/{{task.id}}'">Done</button>
+                        <button onclick="window.location.href='/tasks/{{task.id}}/delete'">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

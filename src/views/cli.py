@@ -16,11 +16,11 @@ class Task:
     end_date: date
     done: bool = False
 
-    def __str__(self):
+    def __str__(self) -> str:
         status = "[X]" if self.done else "[ ]"
         return f"{self.id}. {status} \t📅 {self.end_date.strftime('%d/%m/%Y')} \t📝 {self.task} "
 
-    def check(self):
+    def check(self) -> None:
         """Mark the task as done if it is not already, if it is, mark it as not done."""
         self.done = not self.done
         models.update_task(self.id, self.done)

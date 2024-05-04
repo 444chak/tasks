@@ -1,0 +1,33 @@
+.tasks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tasks .tasks-list {
+  width: 50%;
+  border-collapse: collapse;
+}
+.tasks .tasks-list th, .tasks .tasks-list td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+.tasks .tasks-list th {
+  background-color: #f4f4f4;
+}
+.tasks .tasks-list tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+.tasks .tasks-list tr:hover {
+  background-color: #f1f1f1;
+}
+.tasks .tasks-list td.actions button {
+  border: 1px solid #ddd;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+.tasks .tasks-list td.actions button:hover {
+  background-color: #ddd;
+}

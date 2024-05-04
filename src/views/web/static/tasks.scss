@@ -1,0 +1,43 @@
+
+.tasks {
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    
+    .tasks-list { // table element
+        width: 50%;
+        border-collapse: collapse;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+
+        tr {
+            &:nth-child(odd) {
+                background-color: #f9f9f9;
+            }
+            &:hover {
+                background-color: #f1f1f1;
+            }
+        }
+
+
+        td.actions {
+            button {
+                border: 1px solid #ddd;
+
+                margin: 0 5px;
+                padding: 5px 10px;
+                background-color: #f4f4f4;
+                cursor: pointer;
+                &:hover {
+                    background-color: #ddd;
+                }
+            }
+        }
+    }
+}
