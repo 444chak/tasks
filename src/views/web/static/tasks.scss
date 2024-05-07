@@ -1,13 +1,14 @@
-
 .tasks {
     display: flex;
     justify-content: center;
-    align-items: center ;
-    
-    .tasks-list { // table element
+    align-items: center;
+
+    .tasks-list {
+        // table element
         width: 50%;
         border-collapse: collapse;
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
@@ -17,6 +18,9 @@
         }
 
         tr {
+            &#done {
+                background-color: #d6ffd7;
+            }
             &:nth-child(odd) {
                 background-color: #f9f9f9;
             }
@@ -25,19 +29,66 @@
             }
         }
 
+        td {
+            &.expired {
+                background-color: #ffdcdc;
+            }
 
-        td.actions {
-            button {
-                border: 1px solid #ddd;
-
-                margin: 0 5px;
-                padding: 5px 10px;
-                background-color: #f4f4f4;
-                cursor: pointer;
+            &.done {
+                transition: ease-in-out 0.2s;
                 &:hover {
-                    background-color: #ddd;
+                    transition: ease-in-out 0.2s;
+                    box-shadow: 0 0 5px #bdbdbd;
+                    cursor: pointer;
                 }
             }
         }
+        
+        tr.add-task {
+            td {
+                background-color: #ffffff;
+                padding: 0;
+                input {
+                    background: none;
+                    border: none;
+                    width: 100%;
+                    padding: 8px;
+                    text-align: center;
+                    &:focus {
+                        outline: none;
+                        box-shadow: 0 0 5px #bdbdbd;
+                    }
+
+                    &[type="text"]::placeholder {
+                        color: #757575;
+                    }
+
+                    &[type="date"] {
+                        font-family: inherit;
+                        color: #757575;
+                    }
+                }
+            }
+        }
+
+        button {
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            padding: 5px 10px;
+            background-color: #f4f4f4;
+            cursor: pointer;
+            &:hover {
+                background-color: #ddd;
+            }
+        }
     }
+}
+
+html {
+    box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
 }

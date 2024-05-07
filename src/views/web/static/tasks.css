@@ -7,7 +7,8 @@
   width: 50%;
   border-collapse: collapse;
 }
-.tasks .tasks-list th, .tasks .tasks-list td {
+.tasks .tasks-list th,
+.tasks .tasks-list td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
@@ -15,19 +16,65 @@
 .tasks .tasks-list th {
   background-color: #f4f4f4;
 }
+.tasks .tasks-list tr#done {
+  background-color: #d6ffd7;
+}
 .tasks .tasks-list tr:nth-child(odd) {
   background-color: #f9f9f9;
 }
 .tasks .tasks-list tr:hover {
   background-color: #f1f1f1;
 }
-.tasks .tasks-list td.actions button {
+.tasks .tasks-list td.expired {
+  background-color: #ffdcdc;
+}
+.tasks .tasks-list td.done {
+  transition: ease-in-out 0.2s;
+}
+.tasks .tasks-list td.done:hover {
+  transition: ease-in-out 0.2s;
+  box-shadow: 0 0 5px #bdbdbd;
+  cursor: pointer;
+}
+.tasks .tasks-list tr.add-task td {
+  background-color: #ffffff;
+  padding: 0;
+}
+.tasks .tasks-list tr.add-task td input {
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+}
+.tasks .tasks-list tr.add-task td input:focus {
+  outline: none;
+  box-shadow: 0 0 5px #bdbdbd;
+}
+.tasks .tasks-list tr.add-task td input[type=text]::placeholder {
+  color: #757575;
+}
+.tasks .tasks-list tr.add-task td input[type=date] {
+  font-family: inherit;
+  color: #757575;
+}
+.tasks .tasks-list button {
   border: 1px solid #ddd;
   margin: 0 5px;
   padding: 5px 10px;
   background-color: #f4f4f4;
   cursor: pointer;
 }
-.tasks .tasks-list td.actions button:hover {
+.tasks .tasks-list button:hover {
   background-color: #ddd;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
