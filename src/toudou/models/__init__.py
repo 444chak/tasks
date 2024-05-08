@@ -63,13 +63,13 @@ tasks_table = sqlalchemy.Table(
     sqlalchemy.Column("end_date", sqlalchemy.Date),
     sqlalchemy.Column("done", sqlalchemy.Boolean),
     sqlalchemy.Column(
-        "uuid", sqlalchemy.Uuid(as_uuid=True), unique=True, default=uuid.uuid4
+        "uuid", sqlalchemy.Uuid(as_uuid=True), unique=True, default=uuid.uuid4()
     ),
 )
 
 
 def add_task(
-    task: str, end_date: date, done: bool = False, guid: uuid.UUID = uuid.uuid4()
+    task: str, end_date: date, done: bool = False, guid: uuid.UUID = None
 ) -> bool:
     """Add a task to the database.
     Args:
@@ -79,6 +79,8 @@ def add_task(
     Returns:
         bool: True if the task was added successfully, False otherwise.
     """
+    if guid is None:
+        guid = uuid.uuid4()
     obj = Task(None, task, end_date, done, guid)
 
     stmt = tasks_table.insert().values(
