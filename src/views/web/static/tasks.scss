@@ -1,10 +1,16 @@
+.global-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .tasks {
     display: flex;
     justify-content: center;
     align-items: center;
 
     .tasks-list {
-        // table element
         width: 50%;
         border-collapse: collapse;
         th,
@@ -43,7 +49,7 @@
                 }
             }
         }
-        
+
         tr.add-task {
             td {
                 background-color: #ffffff;
@@ -70,17 +76,17 @@
                 }
             }
         }
+    }
+}
 
-        button {
-            border: 1px solid #ddd;
-            margin: 0 5px;
-            padding: 5px 10px;
-            background-color: #f4f4f4;
-            cursor: pointer;
-            &:hover {
-                background-color: #ddd;
-            }
-        }
+button {
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    &:hover {
+        background-color: #ddd;
     }
 }
 

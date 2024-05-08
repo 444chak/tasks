@@ -1,34 +1,20 @@
 """The main module for the tasks CLI."""
+
 import inspect
+import os
 from datetime import date, datetime
-from dataclasses import dataclass
 from sqlalchemy.exc import OperationalError
 import click
 import models
 import services
 
-
-@dataclass
-class Task:
-    """A simple class to represent a task."""
-    id: int
-    task: str
-    end_date: date
-    done: bool = False
-
-    def __str__(self) -> str:
-        status = "[X]" if self.done else "[ ]"
-        return f"{self.id}. {status} \t📅 {self.end_date.strftime('%d/%m/%Y')} \t📝 {self.task} "
-
-    def check(self) -> None:
-        """Mark the task as done if it is not already, if it is, mark it as not done."""
-        self.done = not self.done
-        models.update_task(self.id, self.done)
+EXPORT_PATH = "exports/"
 
 
 @click.group()
 def cli():
     """A simple CLI for managing tasks."""
+
 
 @cli.command()
 def init_db():
@@ -37,13 +23,14 @@ def init_db():
     models.create_database()
     click.echo("Database created ! ✅")
 
+
 @cli.command()
 def todo():
     """List all tasks."""
     try:
         click.echo("Tasks:")
         for task in models.tasks_list():
-            click.echo(Task(*task))
+            click.echo(models.Task(*task))
     except OperationalError:
         error_db()
 
@@ -74,7 +61,6 @@ def add(task: str, end_date: datetime):
 
     except OperationalError:
         error_db()
-
 
 
 @cli.command()
@@ -115,7 +101,7 @@ def done(task_id: int):
     try:
         if len(task_id) > 1:
             for task in task_id:
-                task = Task(*models.get_task(task))
+                task = models.Task(*models.get_task(task))
                 if task:
                     task.check()
                     click.echo(f"Task {task_id} updated ! ✅")
@@ -124,7 +110,7 @@ def done(task_id: int):
             return
         else:
             task_id = task_id[0]
-        task = Task(*models.get_task(task_id))
+        task = models.Task(*models.get_task(task_id))
         if task:
             task.check()
             click.echo(f"Task {task_id} updated ! ✅")
@@ -135,17 +121,52 @@ def done(task_id: int):
 
 
 @cli.command()
-@click.option("-f", "--file", help="The file to export to.", default="tasks.csv")
-@click.argument("tasks", type=int, nargs=-1, required=False)
-def texport(file: str, tasks):
+@click.option(
+    "-f",
+    "--file",
+    help="The file to export to.",
+    show_default=True,
+    default="tasks.csv",
+    prompt=True,
+)
+@click.argument(
+    "tasks",
+    type=int,
+    nargs=-1,
+    required=False,
+)
+def texport(file: str, tasks: list[int]):
     """Export tasks to a file.
-    USAGE: texport FILE [TASKS...]
+    USAGE: texport [--file FILE] [TASKS...]
     FILE is the file to export to.
     TASKS are the tasks to export. If not specified, all tasks will be exported."""
     if not tasks:
         click.echo("No tasks specified. Exporting all tasks.")
+        click.echo(
+            "If you want to export only specific tasks, use 'texport FILE TASK_ID [TASK_ID...]'"
+        )
     try:
-        services.export_tasks(file, tasks)
+        if file != "tasks.csv" and not file.endswith(".csv"):
+            file += ".csv"
+
+        if os.path.isfile(f"{EXPORT_PATH}//{file}"):
+            click.echo("File already exists. Do you want to overwrite it? (y/n)")
+            if input().lower() != "y":
+                return
+
+        file = f"{EXPORT_PATH}{file}"
+
+        try:
+            with open(file, "w", newline="", encoding="utf-8") as f:
+                f.write(services.export_tasks(tasks))
+
+            click.echo(f"Tasks exported to {file} ! ✅")
+        except FileNotFoundError:
+            click.echo("Directory {EXPORT_PATH} does not exist. Creating it...")
+            os.mkdir(EXPORT_PATH)
+            with open(file, "w", newline="", encoding="utf-8") as f:
+                f.write(services.export_tasks(tasks))
+
     except OperationalError:
         error_db()
 
@@ -167,6 +188,8 @@ def error_db():
     click.echo(
         click.style("ERROR: ", fg="red", bold=True)
         + "A database error occurred with "
-        + click.style(inspect.stack()[1][3], fg="yellow", bold=True) + ".")
+        + click.style(inspect.stack()[1][3], fg="yellow", bold=True)
+        + "."
+    )
     click.echo("Do you have the database initialized ?")
     click.echo("You can do it by running the command: init_db")

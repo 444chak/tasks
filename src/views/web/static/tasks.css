@@ -1,3 +1,10 @@
+.global-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
 .tasks {
   display: flex;
   justify-content: center;
@@ -58,14 +65,15 @@
   font-family: inherit;
   color: #757575;
 }
-.tasks .tasks-list button {
+
+button {
   border: 1px solid #ddd;
   margin: 0 5px;
   padding: 5px 10px;
   background-color: #f4f4f4;
   cursor: pointer;
 }
-.tasks .tasks-list button:hover {
+button:hover {
   background-color: #ddd;
 }
 

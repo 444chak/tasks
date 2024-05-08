@@ -16,6 +16,7 @@
         <table class="tasks-list">
             <thead>
                 <tr>
+                    <th></th>
                     <th>ID</th>
                     <th>Title</th>
                     <th>End date</th>
@@ -27,35 +28,43 @@
                 </tr>
             </thead>
             <tbody>
-                {% for task in tasks %}
-                <tr {% if task.done %}id="done" {% endif %}>
-                    <td>{{task.id}}</td>
-                    <td>{{task.title}}</td>
-                    <!-- <td>{{task.end_date.strftime('%d/%m/%Y')}}</td> -->
-                    <td {% if task.end_date < today and not task.done %} class="expired" {% endif %}>
-                        {{task.end_date}}</td>
-                    <td class="done" onclick="window.location.href='/tasks/{{task.id}}/done'">
-                        {% if task.done %}Complete{% else %}In progress{% endif %}
-                    </td>
-                    <td class="actions">
-                        <button onclick="
-                            if (confirm('Are you sure you want to delete this task?\nThis action cannot be undone.')) {
-                            window.location.href='/tasks/{{task.id}}/remove'
-                            }
-                            ">Delete</button>
-                    </td>
-                </tr>
-                {% endfor %}
-                <form action="/tasks/add" method="POST">
+                <form action="/tasks/download" method="POST" id="download-form">
+                    {% for task in tasks %}
+                    <tr {% if task.done %}id="done" {% endif %}>
+                        <td><input type="checkbox" name="tasks" value="{{task.id}}" 
+                        </td>
+                        <td>{{task.id}}</td>
+                        <td>{{task.title}}</td>
+                        <!-- <td>{{task.end_date.strftime('%d/%m/%Y')}}</td> -->
+                        <td {% if task.end_date < today and not task.done %} class="expired" {% endif %}>
+                            {{task.end_date}}</td>
+                        <td class="done" onclick="window.location.href='/tasks/{{task.id}}/done'">
+                            {% if task.done %}Complete{% else %}In progress{% endif %}
+                        </td>
+                        <td class="actions">
+                            <button onclick="
+                                if (confirm('Are you sure you want to delete this task?\nThis action cannot be undone.')) {
+                                window.location.href='/tasks/{{task.id}}/remove'
+                                }
+                                ">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </form>
+                <form action="/tasks/add" method="POST" id="add-task-form">
                     <tr class="add-task">
+                        <td></td>
                         <td>+</td>
-                        <td><input type="text" name="title" placeholder="Title" required></td>
-                        <td><input type="date" name="end_date" required min="{{today}}"></td>
+                        <td><input type="text" name="title" placeholder="Title" required form="add-task-form"></td>
+                        <td><input type="date" name="end_date" required min="{{today}}" form="add-task-form"></td>
                         <td></td>
                         <td><button type="submit">Add</button></td>
                     </tr>
             </tbody>
         </table>
+    </div>
+    <div class="global-actions">
+        <button type="submit" form="download-form">Download</button>
     </div>
 </body>
 

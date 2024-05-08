@@ -1,7 +1,7 @@
 """Main module for tasks flask webapp."""
 
 from datetime import date
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, Response
 import models
 import services
 
@@ -53,4 +53,20 @@ def tasks(task_id: int = None, action: str = None):
             )
         ),
         today=date.today(),
+    )
+
+
+@app.route("/tasks/download", methods=["POST"])
+def tasks_download() -> Response:
+    """Download the tasks list.
+
+    Returns:
+        Response: The CSV file containing the tasks.
+    """
+
+
+    return Response(
+        services.export_tasks(list(map(int, request.form.getlist("tasks")))),
+        mimetype="text/csv",
+        headers={"Content-disposition": "attachment; filename=tasks.csv"},
     )
