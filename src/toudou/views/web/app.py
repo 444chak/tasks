@@ -3,8 +3,8 @@
 from datetime import date
 import dataclasses
 from flask import Flask, render_template, redirect, request, Response
-import models
-import services
+import toudou.models as models
+import toudou.services as services
 
 app = Flask(__name__)
 
@@ -18,9 +18,7 @@ def index():
 @app.route("/tasks")
 @app.route("/tasks/<int:task_id>/<string:action>")
 @app.route("/tasks/add", methods=["POST"])
-def tasks(
-    task_id: int = None, action: str = None
-) -> Response:
+def tasks(task_id: int = None, action: str = None) -> Response:
     """The tasks page of the webapp."""
     if task_id and action:
         if action == "done":
@@ -37,8 +35,6 @@ def tasks(
                 request.form["title"], date.fromisoformat(request.form["end_date"])
             )
             return redirect("/tasks")
-
-    # tasks_header = ["id", "title", "end_date", "done"]
 
     tasks_header = [f.name for f in dataclasses.fields(models.Task)]
 

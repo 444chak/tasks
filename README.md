@@ -20,6 +20,13 @@ pdm install
 ```
 
 # Usage
+
+## Run CLI commands app
 ```bash
 pdm run tasks
+```
+
+## Run web app
+```bash
+pdm run web
 ```

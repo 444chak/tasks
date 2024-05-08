@@ -2,11 +2,9 @@
 
 import csv
 import io
-import os
 import dataclasses
-import click
-import models
 from sqlalchemy.exc import IntegrityError
+import toudou.models as models
 
 
 EXPORT_PATH = "exports/"

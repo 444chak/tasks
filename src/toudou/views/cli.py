@@ -2,15 +2,11 @@
 
 import inspect
 import os
-
-# import csv
-
-
 from datetime import date, datetime
 from sqlalchemy.exc import OperationalError
 import click
-import models
-import services
+import toudou.models as models
+import toudou.services as services
 
 EXPORT_PATH = "exports/"
 
