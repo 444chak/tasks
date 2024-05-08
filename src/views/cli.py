@@ -2,6 +2,10 @@
 
 import inspect
 import os
+
+# import csv
+
+
 from datetime import date, datetime
 from sqlalchemy.exc import OperationalError
 import click
@@ -19,8 +23,16 @@ def cli():
 @cli.command()
 def init_db():
     """Create the database."""
+    if not models.create_database():
+        click.echo("Database already exists.")
+        click.echo("Do you want to recreate it? (y/n)")
+        if input().lower() == "y":
+            click.echo("Database recreated ! ✅")
+            return
+        else:
+            click.echo("Database not recreated.")
+            return
     click.echo("Creating the database...")
-    models.create_database()
     click.echo("Database created ! ✅")
 
 
@@ -41,11 +53,12 @@ def get(task: int):
     """Get a specific task by ID.
     TASK is the ID of the task to get."""
     try:
-        task = models.get_task(task)
-        if task:
-            click.echo(models.Task(*task))
+        task_obj = models.get_task(task)
+        if task_obj:
+            click.echo(models.Task(*task_obj))
         else:
             click.echo(f"Task {task} not found ! ❌")
+            click.echo("For knowing the task_id, use 'todo' command.")
     except OperationalError:
         error_db()
 
@@ -74,6 +87,16 @@ def add(task: str, end_date: datetime):
             click.echo("Task added ! ✅")
             click.echo(f"Task: {task}, End date: {end_date.strftime('%d/%m/%Y')}")
 
+    except OperationalError:
+        error_db()
+
+
+@cli.command()
+def testadd():
+    """Add a test task."""
+    try:
+        if models.add_task("Test task", date.today()):
+            click.echo("Task added ! ✅")
     except OperationalError:
         error_db()
 
@@ -125,11 +148,10 @@ def done(task_id: int):
             return
         else:
             task_id = task_id[0]
-        task = models.Task(*models.get_task(task_id))
-        if task:
-            task.check()
+        try:
+            models.Task(*models.get_task(task_id)).check()
             click.echo(f"Task {task_id} updated ! ✅")
-        else:
+        except TypeError:
             click.echo(f"Task {task_id} not found ! ❌")
     except OperationalError:
         error_db()
@@ -173,27 +195,47 @@ def texport(file: str, tasks: list[int]):
 
         try:
             with open(file, "w", newline="", encoding="utf-8") as f:
-                f.write(services.export_tasks(tasks))
-
-            click.echo(f"Tasks exported to {file} ! ✅")
+                export = services.export_tasks(tasks)
+                f.write(export[0])
         except FileNotFoundError:
             click.echo("Directory {EXPORT_PATH} does not exist. Creating it...")
             os.mkdir(EXPORT_PATH)
             with open(file, "w", newline="", encoding="utf-8") as f:
-                f.write(services.export_tasks(tasks))
+                export = services.export_tasks(tasks)
+                f.write(export[0])
+        click.echo(f"Tasks exported to {file} ! ✅")
+        click.echo(f"Tasks not found: {export[1]}")
 
     except OperationalError:
         error_db()
 
 
 @cli.command()
-@click.option("-f", "--file", help="The file to import from.", required=True)
-def timport(file: str):
+# @click.option("-f", "--file", help="The file to import from.", required=True)
+@click.argument("file", type=click.File("r"))
+def timport(file: click.File):
     """Import tasks from a file.
     USAGE: timport FILE
     FILE is the file to import from."""
     try:
-        services.import_tasks(file)
+        valid, invalid = services.import_tasks(file.read())
+        services.import_tasks(file.read())
+        if valid:
+            click.echo(f"Tasks imported from {file.name} ! ✅")
+            click.echo("Tasks importeds:")
+            for task in valid:
+                click.echo(models.Task(*task))
+        if invalid:
+            if not valid:
+                click.echo("No tasks imported. ❌")
+            click.echo("Invalid tasks:")
+            for task in invalid:
+                click.echo(
+                    f"Task name: {task[0][1]}, End date: {task[0][2]}, GUID: {task[0][3]} - "
+                    + click.style("Error: ", fg="red")
+                    + click.style(task[1], fg="yellow")
+                )
+
     except OperationalError:
         error_db()
 
@@ -207,4 +249,4 @@ def error_db():
         + "."
     )
     click.echo("Do you have the database initialized ?")
-    click.echo("You can do it by running the command: init_db")
+    click.echo("You can do it by running the command: init-db")

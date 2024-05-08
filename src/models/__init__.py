@@ -1,6 +1,8 @@
 """This module contains the database models."""
 
 from datetime import date
+import uuid
+import io
 from dataclasses import dataclass
 import sqlalchemy
 
@@ -8,8 +10,13 @@ engine = sqlalchemy.create_engine("sqlite:///database.db")
 metadata = sqlalchemy.MetaData()
 
 
-def create_database():
+def create_database(force: bool = False) -> None:
     """Create the database."""
+    if metadata.tables:
+        if force:
+            metadata.drop_all(engine)
+        else:
+            return False
     metadata.create_all(engine)
 
 
@@ -21,10 +28,26 @@ class Task:
     task: str
     end_date: date
     done: bool = False
+    guid: uuid.UUID = uuid.uuid4()
+
+    def __post_init__(self):
+        self.end_date = (
+            date.fromisoformat(self.end_date)
+            if isinstance(self.end_date, str)
+            else self.end_date
+        )
+        self.done = self.done == "True" if isinstance(self.done, str) else self.done
+
+        self.guid = uuid.UUID(self.guid) if isinstance(self.guid, str) else self.guid
 
     def __str__(self) -> str:
-        status = "[X]" if self.done else "[ ]"
-        return f"{self.id}. {status} \t📅 {self.end_date.strftime('%d/%m/%Y')} \t📝 {self.task} "
+        text = io.StringIO()
+        text.write(f"{self.id}. ")
+        text.write(f"{'[X]' if self.done else '[ ]'} \t")
+        text.write(f"📅 {self.end_date.strftime('%d/%m/%Y')} \t")
+        text.write(f"📝 {self.task} \t")
+        text.write(f"🔑 {self.guid}")
+        return text.getvalue()
 
     def check(self) -> None:
         """Mark the task as done if it is not already, if it is, mark it as not done."""
@@ -39,10 +62,15 @@ tasks_table = sqlalchemy.Table(
     sqlalchemy.Column("task", sqlalchemy.String),
     sqlalchemy.Column("end_date", sqlalchemy.Date),
     sqlalchemy.Column("done", sqlalchemy.Boolean),
+    sqlalchemy.Column(
+        "uuid", sqlalchemy.Uuid(as_uuid=True), unique=True, default=uuid.uuid4
+    ),
 )
 
 
-def add_task(task: str, end_date: date, done: bool = False) -> bool:
+def add_task(
+    task: str, end_date: date, done: bool = False, guid: uuid.UUID = uuid.uuid4()
+) -> bool:
     """Add a task to the database.
     Args:
         task (str): The task to add.
@@ -51,7 +79,11 @@ def add_task(task: str, end_date: date, done: bool = False) -> bool:
     Returns:
         bool: True if the task was added successfully, False otherwise.
     """
-    stmt = tasks_table.insert().values(task=task, end_date=end_date, done=done)
+    obj = Task(None, task, end_date, done, guid)
+
+    stmt = tasks_table.insert().values(
+        task=obj.task, end_date=obj.end_date, done=obj.done, uuid=obj.guid
+    )
     with engine.begin() as connection:
         connection.execute(stmt)
         return True

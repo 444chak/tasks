@@ -3,8 +3,10 @@
 import csv
 import io
 import os
+import dataclasses
 import click
 import models
+from sqlalchemy.exc import IntegrityError
 
 
 EXPORT_PATH = "exports/"
@@ -20,42 +22,56 @@ def export_tasks(tasks: list[int] = None) -> str:
     if len(tasks) == 0:
         tasks = models.tasks_list()
     else:
-        tasks = [models.get_task(task) for task in tasks]
+        tasks_list = []
+        tasks_not_found = []
+        for task in tasks:
+            if models.get_task(task) is None:
+                tasks_not_found.append(task)
+            else:
+                tasks_list.append(models.get_task(task))
 
     output = io.StringIO()
-    csvwriter = csv.DictWriter(output, fieldnames=["id", "task", "end_date", "done"])
+    csvwriter = csv.DictWriter(
+        output, fieldnames=[f.name for f in dataclasses.fields(models.Task)]
+    )
 
     csvwriter.writeheader()
 
-    for task in tasks:
+    for task in tasks_list:
         csvwriter.writerow(
-            {
-                "id": task[0],
-                "task": task[1],
-                "end_date": task[2],
-                "done": task[3],
-            }
+            dict(zip([f.name for f in dataclasses.fields(models.Task)], task))
         )
 
-    return output.getvalue()
+    return output.getvalue(), tasks_not_found
 
 
-def import_tasks(file="tasks.csv"):
-    """Import tasks from a CSV file."""
-    if file != "tasks.csv" and not file.endswith(".csv"):
-        file += ".csv"
+def import_tasks(content: str) -> tuple[list]:
+    """Import tasks from a CSV file.
+    Args:
+        content (str): The content of the CSV file.
+    Returns:
+        tuple: A tuple containing the added tasks and the skipped tasks."""
+    reader = csv.reader(io.StringIO(content))
+    tasks = list(reader)
 
-    file = f"{EXPORT_PATH}{file}"
-    if not os.path.isfile(file):
-        click.echo(f"File {file} does not exist.")
-        return
-
-    with open(file, "r", newline="", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        tasks = list(reader)
-
+    skippeds_tasks = []
+    added_tasks = []
     for task in tasks:
-        print(task[1:])
-        models.add_task(*task[1:])
+        if task == [f.name for f in dataclasses.fields(models.Task)]:
+            continue
+        try:
+            models.add_task(*task[1:])
+            added_tasks.append(task)
+        except (ValueError, IntegrityError) as e:
+            skippeds_tasks.append(
+                (
+                    task,
+                    (
+                        "Task already exists."
+                        if e.__class__ == IntegrityError
+                        else "Invalid task."
+                    ),
+                )
+            )
 
-    click.echo(f"Tasks imported from {file}")
+    return added_tasks, skippeds_tasks

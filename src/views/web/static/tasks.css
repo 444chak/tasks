@@ -4,6 +4,14 @@
   align-items: center;
   margin-top: 20px;
 }
+.global-actions .import {
+  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+}
+.global-actions .import > * {
+  margin: 5px;
+}
 
 .tasks {
   display: flex;
@@ -66,14 +74,14 @@
   color: #757575;
 }
 
-button {
+button, input[type=file]::-webkit-file-upload-button {
   border: 1px solid #ddd;
   margin: 0 5px;
   padding: 5px 10px;
   background-color: #f4f4f4;
   cursor: pointer;
 }
-button:hover {
+button:hover, input[type=file]::-webkit-file-upload-button:hover {
   background-color: #ddd;
 }
 
