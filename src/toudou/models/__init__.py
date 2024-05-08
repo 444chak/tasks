@@ -5,14 +5,26 @@ import uuid
 import io
 from dataclasses import dataclass
 import sqlalchemy
+from sqlalchemy import inspect
 
 engine = sqlalchemy.create_engine("sqlite:///database.db")
 metadata = sqlalchemy.MetaData()
 
 
+def is_db() -> bool:
+    """Check if the database exists.
+    Returns:
+        bool: True if the database exists, False otherwise.
+    """
+    return inspect(engine).get_table_names() == list(metadata.tables.keys())
+
+
 def create_database(force: bool = False) -> None:
-    """Create the database."""
-    if metadata.tables:
+    """Create the database
+    Args:
+        force (bool): If True, recreate the database.
+    """
+    if is_db():
         if force:
             metadata.drop_all(engine)
         else:

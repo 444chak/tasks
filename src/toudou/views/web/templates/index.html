@@ -16,42 +16,62 @@
 
         <h2>Welcome to TOUDOU. &copy; &nbsp; &mdash; &nbsp; task manager.</h2>
 
+        {% if is_db %}
+
         <p>You can manage your tasks by clicking on the button below.</p>
 
         <button onclick="window.location.href='/tasks'">View tasks</button>
 
+        {% else %}
+
+        <p>It seems that the database is not initialized.</p>
+        <p>Click on the button below to initialize the database.</p>
+
+        <button onclick="window.location.href='/init'">Initialize database</button>
+        {% endif %}
+
         <h2>How does it work?</h2>
 
         <h3>Add a task</h3>
-        <p>Simply fill in the <span class="quoted">"Title"</span> and <span class="quoted">"End date"</span> fields and click "Add".</p>
+        <p>Simply fill in the <span class="quoted">"Title"</span> and <span class="quoted">"End date"</span> fields and
+            click "Add".</p>
 
         <img src="{{url_for('static', filename='add.gif')}}" alt="Add task" style="width: 100%; max-width: 500px;">
 
         <h3>Mark a task as completed</h3>
-        <p>You need to click <span class="quoted">"Complete"</span> in the <span class="quoted">"Done"</span> column.</p>
+        <p>You need to click <span class="quoted">"Complete"</span> in the <span class="quoted">"Done"</span> column.
+        </p>
         <p>You can also mark a task as in progress by clicking <span class="quoted">"In progress"</span>.</p>
 
         <img src="{{url_for('static', filename='done.gif')}}" alt="Done task" style="width: 100%; max-width: 500px;">
 
         <h3>Delete a task</h3>
-        <p>Click <span class="quoted">"Delete"</span> in the <span class="quoted">"Actions"</span> column of the task you want to delete.</p>
+        <p>Click <span class="quoted">"Delete"</span> in the <span class="quoted">"Actions"</span> column of the task
+            you want to delete.</p>
 
-        <img src="{{url_for('static', filename='delete.gif')}}" alt="Delete task" style="width: 100%; max-width: 500px;">
+        <img src="{{url_for('static', filename='delete.gif')}}" alt="Delete task"
+            style="width: 100%; max-width: 500px;">
 
         <h3>Delete multiple tasks</h3>
-        <p>You can select the tasks you want to delete and click <span class="quoted">"Delete"</span> located below the task list.</p>
+        <p>You can select the tasks you want to delete and click <span class="quoted">"Delete"</span> located below the
+            task list.</p>
 
-        <img src="{{url_for('static', filename='delete_multiple.gif')}}" alt="Delete multiple tasks" style="width: 100%; max-width: 500px;">
+        <img src="{{url_for('static', filename='delete_multiple.gif')}}" alt="Delete multiple tasks"
+            style="width: 100%; max-width: 500px;">
 
         <h3>Export tasks</h3>
-        <p>Select the tasks you want to export and click <span class="quoted">"Download"</span> located below the task list.</p>
+        <p>Select the tasks you want to export and click <span class="quoted">"Download"</span> located below the task
+            list.</p>
 
-        <img src="{{url_for('static', filename='export.gif')}}" alt="Export tasks" style="width: 100%; max-width: 500px;">
+        <img src="{{url_for('static', filename='export.gif')}}" alt="Export tasks"
+            style="width: 100%; max-width: 500px;">
 
         <h3>Import tasks</h3>
-        <p>Choose a CSV file containing the tasks you want to import and click <span class="quoted">"Upload"</span> located below the task list.</p>
+        <p>Choose a CSV file containing the tasks you want to import and click <span class="quoted">"Upload"</span>
+            located below the task list.</p>
 
-        <img src="{{url_for('static', filename='import.gif')}}" alt="Import tasks" style="width: 100%; max-width: 500px;">
+        <img src="{{url_for('static', filename='import.gif')}}" alt="Import tasks"
+            style="width: 100%; max-width: 500px;">
 
     </div>
 

@@ -10,9 +10,12 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def index():
-    """The main page of the webapp."""
-    return render_template("index.html")
+def index() -> Response:
+    """The index page of the webapp.
+    Returns:
+        Response: The index page.
+    """
+    return render_template("index.html", is_db=models.is_db())
 
 
 @app.route("/tasks")
@@ -20,6 +23,10 @@ def index():
 @app.route("/tasks/add", methods=["POST"])
 def tasks(task_id: int = None, action: str = None) -> Response:
     """The tasks page of the webapp."""
+
+    if not models.is_db():
+        return redirect("/")
+
     if task_id and action:
         if action == "done":
             models.update_task(task_id, not models.get_task(task_id)[3])
@@ -120,3 +127,10 @@ def tasks_import():
     services.import_tasks(content)
 
     return redirect("/tasks")
+
+
+@app.route("/init")
+def init_db():
+    """Initialize the database."""
+    models.create_database()
+    return redirect("/")

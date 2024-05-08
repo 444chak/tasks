@@ -19,15 +19,17 @@ def cli():
 @cli.command()
 def init_db():
     """Create the database."""
-    if not models.create_database():
+    if models.is_db():
         click.echo("Database already exists.")
         click.echo("Do you want to recreate it? (y/n)")
         if input().lower() == "y":
+            models.create_database(force=True)
             click.echo("Database recreated ! ✅")
             return
         else:
             click.echo("Database not recreated.")
             return
+    models.create_database()
     click.echo("Creating the database...")
     click.echo("Database created ! ✅")
 
