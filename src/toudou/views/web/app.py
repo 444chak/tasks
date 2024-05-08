@@ -49,7 +49,27 @@ def tasks(task_id: int = None, action: str = None) -> Response:
         "tasks.html",
         tasks=tasks_map,
         today=date.today(),
+        task_edit=task_id,
     )
+
+
+@app.route("/tasks/edit", methods=["POST"])
+def tasks_edit() -> Response:
+    """Edit a task.
+
+    Returns:
+        Response: A redirect to the tasks page.
+    """
+    task_id = request.form["task_id"]
+
+    task_obj = models.Task(
+        request.form["task_id"],
+        request.form["task"],
+        date.fromisoformat(request.form["end_date"]),
+        request.form["done"],
+    )
+    models.edit_task(task_id, task_obj)
+    return redirect("/tasks")
 
 
 @app.route("/tasks/action", methods=["POST"])

@@ -11,19 +11,13 @@
 
 <body>
     {% include 'partials/header.html' %}
-
-    {{importeds_tasks}}
-
+    <h1>TOUDOU.</h1>
     <div class="tasks">
         <table class="tasks-list">
             <thead>
                 <tr>
                     <th>
-                        <input type="checkbox" form="actions_form" onclick="
-                            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-                            const checked = document.querySelectorAll('input[type=checkbox]:checked');
-                            document.querySelector('.counter').textContent = `${checked.length} tasks selected`;
-                        ">
+                        <input id="checkbox-all" type="checkbox" form="actions_form">
                     <th>ID</th>
                     <th>Title</th>
                     <th>End date</th>
@@ -38,6 +32,27 @@
                 <form name="actions_form" action="/tasks/action" method="POST" id="actions_form"
                     enctype="multipart/form-data">
                     {% for task in tasks %}
+
+                    {% if task.id == task_edit %}
+                </form>
+                <form name="edit-task-form" action="/tasks/edit" method="POST" id="edit-task-form">
+                    <tr {% if task.done %}id="done" {% endif %} class="edit-task">
+                        <input type="hidden" name="task_id" value="{{task.id}}" form="edit-task-form">
+                        <input type="hidden" name="done" value="{{task.done}}" form="edit-task-form">
+                        <td></td>
+                        <td>{{task.id}}</td>
+                        <td><input type="text" name="task" value="{{task.task}}" form="edit-task-form"></td>
+                        <td><input type="date" name="end_date" value="{{task.end_date.strftime('%Y-%m-%d')}}"
+                                min="{{today}}" form="edit-task-form"></td>
+                        <td>{% if task.done %}Complete{% else %}In progress{% endif %}</td>
+                        <td><button type="submit" form="edit-task-form" id="save">Save</button></td>
+                    </tr>
+                </form>
+                <form name="actions_form" action="/tasks/action" method="POST" id="actions_form"
+                    enctype="multipart/form-data">
+                    {% else %}
+
+
                     <tr {% if task.done %}id="done" {% endif %}>
                         <td><input type="checkbox" name="tasks" value="{{task.id}}" form="actions_form"></td>
                         <td>{{task.id}}</td>
@@ -55,8 +70,10 @@
                                 window.location.href='/tasks/{{task.id}}/remove'
                                 }
                                 ">Delete</button>
+                            <button form="" onclick="window.location.href='/tasks/{{task.id}}/edit'">Edit</button>
                         </td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                 </form>
                 <form action="/tasks/add" method="POST" id="add-task-form">
@@ -90,13 +107,41 @@
 
 <script>
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const checkbox_all = document.getElementById('checkbox-all');
     const counter = document.querySelector('.counter');
-    const actions_form = document.querySelector('#actions_form');
+    const download = document.querySelector('button[value="download"]');
+
+    checkbox_all.addEventListener('change', () => {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = checkbox_all.checked;
+        });
+    });
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
             const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-            counter.textContent = `${checked.length} tasks selected`;
+            checkbox_len = checked.length;
+            if (checkbox_all.checked) {
+                checkbox_len--;
+            }
+            counter.textContent = `${checkbox_len} tasks selected`;
         });
     });
+
+    download.addEventListener('click', () => {
+        const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+        if (checked.length === 0) {
+            alert('No tasks selected');
+            event.preventDefault();
+        }
+    });
+
+    const savebutton = document.getElementById('save');
+
+    if (savebutton) {
+        savebutton.addEventListener('click', () => {
+            console.log('clicked');
+        });
+    }
+
 </script>

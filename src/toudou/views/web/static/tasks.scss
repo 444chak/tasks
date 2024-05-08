@@ -73,6 +73,31 @@
             }
         }
 
+        tr.edit-task {
+            td {
+                padding: 0;
+                input {
+                    border: none;
+                    width: 100%;
+                    padding: 8px;
+                    text-align: center;
+                    &:focus {
+                        outline: none;
+                        box-shadow: 0 0 5px #bdbdbd;
+                    }
+
+                    &[type="text"]::placeholder {
+                        color: #757575;
+                    }
+
+                    &[type="date"] {
+                        font-family: inherit;
+                        color: #757575;
+                    }
+                }
+            }
+        }
+
         tr.add-task {
             td {
                 background-color: #ffffff;
@@ -102,7 +127,10 @@
     }
 }
 
-
+h1 {
+    text-align: center;
+    font-size: 3em;
+}
 
 html {
     box-sizing: border-box;

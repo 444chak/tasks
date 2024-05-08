@@ -64,6 +64,26 @@
   box-shadow: 0 0 5px #bdbdbd;
   cursor: pointer;
 }
+.tasks .tasks-list tr.edit-task td {
+  padding: 0;
+}
+.tasks .tasks-list tr.edit-task td input {
+  border: none;
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+}
+.tasks .tasks-list tr.edit-task td input:focus {
+  outline: none;
+  box-shadow: 0 0 5px #bdbdbd;
+}
+.tasks .tasks-list tr.edit-task td input[type=text]::placeholder {
+  color: #757575;
+}
+.tasks .tasks-list tr.edit-task td input[type=date] {
+  font-family: inherit;
+  color: #757575;
+}
 .tasks .tasks-list tr.add-task td {
   background-color: #ffffff;
   padding: 0;
@@ -85,6 +105,11 @@
 .tasks .tasks-list tr.add-task td input[type=date] {
   font-family: inherit;
   color: #757575;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3em;
 }
 
 html {
