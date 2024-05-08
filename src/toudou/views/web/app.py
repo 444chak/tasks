@@ -3,8 +3,8 @@
 from datetime import date
 import dataclasses
 from flask import Flask, render_template, redirect, request, Response
-import toudou.models as models
-import toudou.services as services
+from toudou import models
+from toudou import services
 
 app = Flask(__name__)
 
@@ -12,6 +12,7 @@ app = Flask(__name__)
 @app.route("/")
 def index() -> Response:
     """The index page of the webapp.
+
     Returns:
         Response: The index page.
     """
@@ -22,7 +23,15 @@ def index() -> Response:
 @app.route("/tasks/<int:task_id>/<string:action>")
 @app.route("/tasks/add", methods=["POST"])
 def tasks(task_id: int = None, action: str = None) -> Response:
-    """The tasks page of the webapp."""
+    """The tasks page of the webapp
+
+    Args:
+        task_id (int, optional): The ID of the task. Defaults to None.
+        action (str, optional): The action to perform on the task. Defaults to None.
+
+    Returns:
+        Response: The tasks page.
+    """
 
     if not models.is_db():
         return redirect("/")
@@ -36,7 +45,6 @@ def tasks(task_id: int = None, action: str = None) -> Response:
             return redirect("/tasks")
 
     if request.form:
-        print(request.form)
         if "title" in request.form and "end_date" in request.form:
             models.add_task(
                 request.form["title"], date.fromisoformat(request.form["end_date"])
@@ -84,9 +92,6 @@ def tasks_action() -> Response:
     """Perform an action on the tasks.
     Returns:
         Response: A redirect to the tasks page."""
-    print(request.form["action"])
-    print(request.files["file"])
-
     return redirect(f"/tasks/{request.form['action']}", code=307)
 
 
@@ -117,7 +122,7 @@ def tasks_delete() -> Response:
 
 
 @app.route("/tasks/import", methods=["POST"])
-def tasks_import():
+def tasks_import() -> Response:
     """Import tasks from a CSV file.
 
     Returns:
@@ -130,7 +135,10 @@ def tasks_import():
 
 
 @app.route("/init")
-def init_db():
-    """Initialize the database."""
+def init_db() -> Response:
+    """Initialize the database.
+
+    Returns:
+        Response: A redirect to the index page."""
     models.create_database()
     return redirect("/")
