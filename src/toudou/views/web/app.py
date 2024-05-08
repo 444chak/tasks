@@ -12,10 +12,8 @@ app = Flask(__name__)
 @app.route("/")
 def index() -> Response:
     """The index page of the webapp.
-
     Returns:
-        Response: The index page.
-    """
+        Response: The index page."""
     return render_template("index.html", is_db=models.is_db())
 
 
@@ -24,15 +22,12 @@ def index() -> Response:
 @app.route("/tasks/add", methods=["POST"])
 def tasks(task_id: int = None, action: str = None) -> Response:
     """The tasks page of the webapp
-
     Args:
         task_id (int, optional): The ID of the task. Defaults to None.
         action (str, optional): The action to perform on the task. Defaults to None.
 
     Returns:
-        Response: The tasks page.
-    """
-
+        Response: The tasks page."""
     if not models.is_db():
         return redirect("/")
 
@@ -71,7 +66,6 @@ def tasks(task_id: int = None, action: str = None) -> Response:
 @app.route("/tasks/edit", methods=["POST"])
 def tasks_edit() -> Response:
     """Edit a task.
-
     Returns:
         Response: A redirect to the tasks page.
     """
@@ -98,7 +92,6 @@ def tasks_action() -> Response:
 @app.route("/tasks/download", methods=["POST"])
 def tasks_download() -> Response:
     """Download the tasks list.
-
     Returns:
         Response: The CSV file containing the tasks.
     """
@@ -112,7 +105,6 @@ def tasks_download() -> Response:
 @app.route("/tasks/delete", methods=["POST"])
 def tasks_delete() -> Response:
     """Delete the selected tasks.
-
     Returns:
         Response: A redirect to the tasks page.
     """
@@ -124,7 +116,6 @@ def tasks_delete() -> Response:
 @app.route("/tasks/import", methods=["POST"])
 def tasks_import() -> Response:
     """Import tasks from a CSV file.
-
     Returns:
         Response: A redirect to the tasks page.
     """
@@ -137,7 +128,6 @@ def tasks_import() -> Response:
 @app.route("/init")
 def init_db() -> Response:
     """Initialize the database.
-
     Returns:
         Response: A redirect to the index page."""
     models.create_database()
