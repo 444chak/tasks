@@ -115,6 +115,43 @@ def remove(task_id: int):
 
 
 @cli.command()
+@click.argument("task_id", type=int, required=True, nargs=1)
+@click.option(
+    "-t",
+    "--task",
+    help="The new task description.",
+    prompt="Enter the new task description",
+)
+@click.option(
+    "-d",
+    "--end_date",
+    help="The new end date of the task in the format dd/mm/yyyy.",
+    type=click.DateTime(["%d/%m/%Y"]),
+    prompt="Enter the new end date",
+)
+def edit(task_id: int, task: str, end_date: datetime):
+    """Edit a task.
+    USAGE: edit TASK_ID
+    TASK_ID is the number of the task to edit.
+    If the task does not exist, an error message will be displayed.
+    For knowing the task_id, use the list command."""
+    try:
+        try:
+            task_obj = models.Task(*models.get_task(task_id))
+            if task_obj:
+                task_obj.task = task
+                task_obj.end_date = end_date.date()
+                models.edit_task(task_id, task_obj)
+                click.echo(f"Task {task_id} edited ! ✅")
+            else:
+                click.echo(f"Task {task_id} not found ! ❌")
+        except TypeError:
+            click.echo(f"Task {task_id} not found ! ❌")
+    except OperationalError:
+        error_db()
+
+
+@cli.command()
 @click.argument("task_id", type=int, required=True, nargs=-1)
 def done(task_id: int):
     """Mark a task as done.

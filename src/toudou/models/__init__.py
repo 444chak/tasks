@@ -140,3 +140,19 @@ def tasks_list() -> list:
     with engine.begin() as connection:
         result = connection.execute(stmt)
         return result.fetchall()
+
+def edit_task(task_id: int, task_obj: Task) -> bool:
+    """Edit a task in the database.
+    Args:
+        task_id (int): The id of the task to edit.
+        task (str): The new task.
+        end_date (date): The new end date.
+    Returns:
+        bool: True if the task was edited successfully, False otherwise.
+    """
+    stmt = tasks_table.update().where(tasks_table.c.id == task_id).values(
+        task=task_obj.task, end_date=task_obj.end_date
+    )
+    with engine.begin() as connection:
+        result = connection.execute(stmt)
+        return result.rowcount > 0
