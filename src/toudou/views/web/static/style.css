@@ -28,14 +28,16 @@ header nav ul li a:hover {
   text-decoration: underline;
 }
 
-button, input[type=file]::-webkit-file-upload-button {
+button,
+input[type=file]::-webkit-file-upload-button {
   border: 1px solid #ddd;
   margin: 0 5px;
   padding: 5px 10px;
   background-color: #f4f4f4;
   cursor: pointer;
 }
-button:hover, input[type=file]::-webkit-file-upload-button:hover {
+button:hover,
+input[type=file]::-webkit-file-upload-button:hover {
   background-color: #ddd;
 }
 

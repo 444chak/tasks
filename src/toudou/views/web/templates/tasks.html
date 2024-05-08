@@ -16,8 +16,7 @@
         <table class="tasks-list">
             <thead>
                 <tr>
-                    <th>
-                        <input id="checkbox-all" type="checkbox" form="actions_form">
+                    <th><input id="checkbox-all" type="checkbox" form="actions_form"></th>
                     <th>ID</th>
                     <th>Title</th>
                     <th>End date</th>
@@ -51,8 +50,6 @@
                 <form name="actions_form" action="/tasks/action" method="POST" id="actions_form"
                     enctype="multipart/form-data">
                     {% else %}
-
-
                     <tr {% if task.done %}id="done" {% endif %}>
                         <td><input type="checkbox" name="tasks" value="{{task.id}}" form="actions_form"></td>
                         <td>{{task.id}}</td>
@@ -98,8 +95,6 @@
             <input type="file" form="actions_form" name="file" accept=".csv" />
             <button type="submit" form="actions_form" name="action" value="import">Import</button>
         </div>
-
-
     </div>
 </body>
 
@@ -143,5 +138,4 @@
             console.log('clicked');
         });
     }
-
 </script>

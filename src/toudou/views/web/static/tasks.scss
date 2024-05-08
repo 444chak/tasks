@@ -1,31 +1,50 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3em;
+}
+
 .global-actions {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+
     .import {
         margin-left: 50px;
         display: flex;
         flex-direction: column;
+
         & > * {
             margin: 5px;
         }
     }
+
     .group_actions {
         display: flex;
         flex-direction: column;
+
         & > * {
             margin: 5px;
         }
+
         p.counter {
             padding: 5px;
+
             &::first-letter {
                 font-weight: bold;
             }
         }
     }
-    
-
 }
 
 .tasks {
@@ -36,12 +55,14 @@
     .tasks-list {
         width: 50%;
         border-collapse: collapse;
+
         th,
         td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
+
         th {
             background-color: #f4f4f4;
         }
@@ -50,9 +71,11 @@
             &#done {
                 background-color: #d6ffd7;
             }
+
             &:nth-child(odd) {
                 background-color: #f9f9f9;
             }
+
             &:hover {
                 background-color: #f1f1f1;
             }
@@ -65,6 +88,7 @@
 
             &.done {
                 transition: ease-in-out 0.2s;
+
                 &:hover {
                     transition: ease-in-out 0.2s;
                     box-shadow: 0 0 5px #bdbdbd;
@@ -76,11 +100,13 @@
         tr.edit-task {
             td {
                 padding: 0;
+
                 input {
                     border: none;
                     width: 100%;
                     padding: 8px;
                     text-align: center;
+
                     &:focus {
                         outline: none;
                         box-shadow: 0 0 5px #bdbdbd;
@@ -102,12 +128,14 @@
             td {
                 background-color: #ffffff;
                 padding: 0;
+
                 input {
                     background: none;
                     border: none;
                     width: 100%;
                     padding: 8px;
                     text-align: center;
+
                     &:focus {
                         outline: none;
                         box-shadow: 0 0 5px #bdbdbd;
@@ -125,18 +153,4 @@
             }
         }
     }
-}
-
-h1 {
-    text-align: center;
-    font-size: 3em;
-}
-
-html {
-    box-sizing: border-box;
-}
-*,
-*:before,
-*:after {
-    box-sizing: inherit;
 }

@@ -1,29 +1,33 @@
-$text-color: #333;
+$primary-color: #333;
+$background-color: #f4f4f4;
 
 html {
     font-family: Arial, sans-serif;
     font-size: 16px;
-    color: $text-color;
-    background-color: #f4f4f4;
+    color: $primary-color;
+    background-color: $background-color;
     margin: 0;
     padding: 0;
-
 }
 
 header {
-    color: $text-color;
+    color: $primary-color;
     padding: 10px;
+
     nav {
         ul {
             list-style-type: none;
             margin: 0;
             padding: 0;
+
             li {
                 display: inline;
                 margin-right: 10px;
+
                 a {
-                    color: $text-color;
+                    color: $primary-color;
                     text-decoration: none;
+
                     &:hover {
                         text-decoration: underline;
                     }
@@ -33,21 +37,23 @@ header {
     }
 }
 
-button, input[type="file"]::-webkit-file-upload-button {
-        
+button,
+input[type="file"]::-webkit-file-upload-button {
     border: 1px solid #ddd;
     margin: 0 5px;
     padding: 5px 10px;
-    background-color: #f4f4f4;
+    background-color: $background-color;
     cursor: pointer;
+
     &:hover {
         background-color: #ddd;
     }
 }
 
 .homepage {
-    margin:auto;
+    margin: auto;
     width: 30%;
+
     h1 {
         font-size: 3em;
     }
