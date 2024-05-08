@@ -5,8 +5,8 @@ import os
 from datetime import date, datetime
 from sqlalchemy.exc import OperationalError
 import click
-import toudou.models as models
-import toudou.services as services
+from toudou import models
+from toudou import services
 
 EXPORT_PATH = "exports/"
 
@@ -14,7 +14,6 @@ EXPORT_PATH = "exports/"
 @click.group()
 def cli():
     """A simple CLI for managing tasks."""
-
 
 @cli.command()
 def init_db():
@@ -106,8 +105,7 @@ def remove(task_id: int):
                 else:
                     click.echo(f"Task {task} not found ! ❌")
             return
-        else:
-            task_id = task_id[0]
+        task_id = task_id[0]
         if models.remove_task(task_id):
             click.echo(f"Task {task_id} removed ! ✅")
         else:
@@ -171,8 +169,7 @@ def done(task_id: int):
                 else:
                     click.echo(f"Task {task_id} not found ! ❌")
             return
-        else:
-            task_id = task_id[0]
+        task_id = task_id[0]
         try:
             models.Task(*models.get_task(task_id)).check()
             click.echo(f"Task {task_id} updated ! ✅")

@@ -6,8 +6,6 @@ import dataclasses
 from sqlalchemy.exc import IntegrityError
 from toudou import models
 
-EXPORT_PATH = "exports/"
-
 
 def export_tasks(tasks: list[int] = None) -> str:
     """Export tasks to a CSV file.
