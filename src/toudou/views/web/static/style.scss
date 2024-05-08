@@ -32,3 +32,29 @@ header {
         }
     }
 }
+
+button, input[type="file"]::-webkit-file-upload-button {
+        
+    border: 1px solid #ddd;
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    &:hover {
+        background-color: #ddd;
+    }
+}
+
+.homepage {
+    margin:auto;
+    width: 30%;
+    h1 {
+        font-size: 3em;
+    }
+}
+
+.quoted {
+    font-style: italic;
+    color: #3b3b3b;
+    font-family: Georgia, serif;
+}

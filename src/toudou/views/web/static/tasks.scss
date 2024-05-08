@@ -10,7 +10,19 @@
         & > * {
             margin: 5px;
         }
-    
+    }
+    .group_actions {
+        display: flex;
+        flex-direction: column;
+        & > * {
+            margin: 5px;
+        }
+        p.counter {
+            padding: 5px;
+            &::first-letter {
+                font-weight: bold;
+            }
+        }
     }
     
 
@@ -90,17 +102,7 @@
     }
 }
 
-button, input[type="file"]::-webkit-file-upload-button {
-        
-    border: 1px solid #ddd;
-    margin: 0 5px;
-    padding: 5px 10px;
-    background-color: #f4f4f4;
-    cursor: pointer;
-    &:hover {
-        background-color: #ddd;
-    }
-}
+
 
 html {
     box-sizing: border-box;

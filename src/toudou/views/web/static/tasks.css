@@ -12,6 +12,19 @@
 .global-actions .import > * {
   margin: 5px;
 }
+.global-actions .group_actions {
+  display: flex;
+  flex-direction: column;
+}
+.global-actions .group_actions > * {
+  margin: 5px;
+}
+.global-actions .group_actions p.counter {
+  padding: 5px;
+}
+.global-actions .group_actions p.counter::first-letter {
+  font-weight: bold;
+}
 
 .tasks {
   display: flex;
@@ -72,17 +85,6 @@
 .tasks .tasks-list tr.add-task td input[type=date] {
   font-family: inherit;
   color: #757575;
-}
-
-button, input[type=file]::-webkit-file-upload-button {
-  border: 1px solid #ddd;
-  margin: 0 5px;
-  padding: 5px 10px;
-  background-color: #f4f4f4;
-  cursor: pointer;
-}
-button:hover, input[type=file]::-webkit-file-upload-button:hover {
-  background-color: #ddd;
 }
 
 html {

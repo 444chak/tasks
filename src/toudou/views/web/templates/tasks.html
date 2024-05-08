@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='tasks.css')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tasks</title>
 </head>
 
 <body>
@@ -18,7 +18,12 @@
         <table class="tasks-list">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>
+                        <input type="checkbox" form="actions_form" onclick="
+                            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+                            const checked = document.querySelectorAll('input[type=checkbox]:checked');
+                            document.querySelector('.counter').textContent = `${checked.length} tasks selected`;
+                        ">
                     <th>ID</th>
                     <th>Title</th>
                     <th>End date</th>
@@ -67,8 +72,11 @@
         </table>
     </div>
     <div class="global-actions">
-        <button type="submit" form="actions_form" name="action" value="download">Download</button>
-        <button type="submit" form="actions_form" name="action" value="delete">Delete</button>
+        <div class="group_actions">
+            <p class="counter">0 tasks selected</p>
+            <button type="submit" form="actions_form" name="action" value="download">Download</button>
+            <button type="submit" form="actions_form" name="action" value="delete">Delete</button>
+        </div>
         <div class="import">
             <input type="file" form="actions_form" name="file" accept=".csv" />
             <button type="submit" form="actions_form" name="action" value="import">Import</button>
@@ -79,3 +87,16 @@
 </body>
 
 </html>
+
+<script>
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const counter = document.querySelector('.counter');
+    const actions_form = document.querySelector('#actions_form');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            counter.textContent = `${checked.length} tasks selected`;
+        });
+    });
+</script>
