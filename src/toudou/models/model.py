@@ -13,7 +13,6 @@ metadata = sqlalchemy.MetaData()
 
 def is_db() -> bool:
     """Check if the database exists.
-
     Returns:
         bool: True if the database exists, False otherwise.
     """
