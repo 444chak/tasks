@@ -88,16 +88,6 @@ def add(task: str, end_date: datetime):
 
 
 @cli.command()
-def testadd():
-    """Add a test task."""
-    try:
-        if models.add_task("Test task", date.today()):
-            click.echo("Task added ! ✅")
-    except OperationalError:
-        error_db()
-
-
-@cli.command()
 @click.argument("task_id", type=int, required=True, nargs=-1)
 def remove(task_id: int):
     """Remove a task.
