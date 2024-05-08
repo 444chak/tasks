@@ -31,6 +31,7 @@ class Task:
         self.done = not self.done
         update_task(self.id, self.done)
 
+
 tasks_table = sqlalchemy.Table(
     "tasks",
     metadata,

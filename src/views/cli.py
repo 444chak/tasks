@@ -36,6 +36,21 @@ def todo():
 
 
 @cli.command()
+@click.option("-t", "--task", help="Get a specific task by ID.", type=int, prompt=True)
+def get(task: int):
+    """Get a specific task by ID.
+    TASK is the ID of the task to get."""
+    try:
+        task = models.get_task(task)
+        if task:
+            click.echo(models.Task(*task))
+        else:
+            click.echo(f"Task {task} not found ! ❌")
+    except OperationalError:
+        error_db()
+
+
+@cli.command()
 @click.option("-t", "--task", prompt="Your task", help="The task to remember.")
 @click.option(
     "-d",

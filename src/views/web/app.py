@@ -64,7 +64,6 @@ def tasks_download() -> Response:
         Response: The CSV file containing the tasks.
     """
 
-
     return Response(
         services.export_tasks(list(map(int, request.form.getlist("tasks")))),
         mimetype="text/csv",
