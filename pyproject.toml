@@ -15,10 +15,10 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-tasks = "toudou.views.cli:cli" # reference to cli() function in the __init__.py file in tasks (views) package
-toudou = "toudou.views.cli:cli" # reference to cli() function in the __init__.py file in tasks (views) package
-web = "toudou.views.web:run" # reference to __init__.py file in web package who launches the web app using Flask 
-webd = "toudou.views.web:rund" # reference to __init__.py file in web package who launches the web app using Flask in debug mode
+tasks = "views.cli:cli" # reference to cli() function in the __init__.py file in tasks (views) package
+toudou = "views.cli:cli" # reference to cli() function in the __init__.py file in tasks (views) package
+web = "views.web:run" # reference to __init__.py file in web package who launches the web app using Flask 
+webd = "views.web:rund" # reference to __init__.py file in web package who launches the web app using Flask in debug mode
 
 [build-system]
 requires = ["pdm-backend"]

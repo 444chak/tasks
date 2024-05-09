@@ -1,5 +1,5 @@
 """This module is the entry point of the web application."""
-from toudou.views.web.app import app
+from views.web.app import app
 
 
 def run():

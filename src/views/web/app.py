@@ -3,8 +3,8 @@
 from datetime import date
 import dataclasses
 from flask import Flask, render_template, redirect, request, Response
-from toudou import models
-from toudou import services
+import models
+import services
 
 app = Flask(__name__)
 

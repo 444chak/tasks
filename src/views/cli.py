@@ -5,8 +5,8 @@ import os
 from datetime import date, datetime
 from sqlalchemy.exc import OperationalError
 import click
-from toudou import models
-from toudou import services
+import models
+import services
 
 EXPORT_PATH = "exports/"
 
