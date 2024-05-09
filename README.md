@@ -10,9 +10,9 @@ It allows you to create, list, update and delete tasks. It also allows you to ma
 ## Installation
 
 Nedd to install : 
+- python >= 3.11 (https://www.python.org/)
 - pdm (https://pdm-project.org/latest/)
 - click >= 8.1.7 (https://click.palletsprojects.com/en/8.0.x/)
-- python >= 3.11
 - SQLAlchemy >= 2.0.0 (https://www.sqlalchemy.org/)
 - Flask >= 3.0.3 (https://flask.palletsprojects.com/en/3.0.x/)
 
@@ -31,4 +31,13 @@ pdm run tasks
 ### Run web app
 ```bash
 pdm run web
+```
+#### With debug mode
+
+```bash
+pdm run webd
+```
+*OR*
+```bash
+pdm run flask --app views --debug run
 ```
