@@ -5,8 +5,8 @@ import os
 from datetime import date, datetime
 from sqlalchemy.exc import OperationalError
 import click
-import models
-import services
+from models import tasks as models
+from services import csv_manager as services
 
 EXPORT_PATH = "exports/"
 
@@ -14,6 +14,7 @@ EXPORT_PATH = "exports/"
 @click.group()
 def cli():
     """A simple CLI for managing tasks."""
+
 
 @cli.command()
 def init_db():
@@ -233,7 +234,6 @@ def texport(file: str, tasks: list[int]):
 
 
 @cli.command()
-# @click.option("-f", "--file", help="The file to import from.", required=True)
 @click.argument("file", type=click.File("r"))
 def timport(file: click.File):
     """Import tasks from a file.
@@ -265,10 +265,9 @@ def timport(file: click.File):
 def error_db():
     """Display an error message if the database is not initialized."""
     click.echo(
-        click.style("ERROR: ", fg="red", bold=True)
-        + "A database error occurred with "
-        + click.style(inspect.stack()[1][3], fg="yellow", bold=True)
-        + "."
+        f"{click.style('ERROR: ', fg='red', bold=True)}"
+        f"A database error occurred with "
+        f"{click.style(inspect.stack()[1][3], fg='yellow', bold=True)}."
     )
     click.echo("Do you have the database initialized ?")
     click.echo("You can do it by running the command: init-db")

@@ -1,12 +1,11 @@
 """This module is the entry point of the web application."""
-from views.web.app import app
+from flask import Flask
+from views.web.app import ui
 
+def create_app() -> None:
+    """Create the webapp."""
 
-def run():
-    """Run the web application."""
-    app.run()
+    app = Flask(__name__)
 
-
-def rund():
-    """Run the web application in debug mode."""
-    app.run(debug=True)
+    app.register_blueprint(ui)
+    return app

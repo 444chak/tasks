@@ -4,7 +4,7 @@ import csv
 import io
 import dataclasses
 from sqlalchemy.exc import IntegrityError
-import models
+from models import tasks as models
 
 
 def export_tasks(tasks: list[int] = None) -> str:

@@ -2,24 +2,26 @@
 
 from datetime import date
 import dataclasses
-from flask import Flask, render_template, redirect, request, Response
-import models
-import services
-
-app = Flask(__name__)
+from flask import render_template, redirect, request, Response, Blueprint
+from models import tasks as model
+from services import csv_manager as services
 
 
-@app.route("/")
+ui = Blueprint("ui", __name__, url_prefix="/ui/")
+
+#TODO: Edit all "href="xxx" to "href="{{ url_for('ui.xxx') }}""
+
+@ui.route("/")
 def index() -> Response:
     """The index page of the webapp.
     Returns:
         Response: The index page."""
-    return render_template("index.html", is_db=models.is_db())
+    return render_template("index.html", is_db=model.is_db())
 
 
-@app.route("/tasks")
-@app.route("/tasks/<int:task_id>/<string:action>")
-@app.route("/tasks/add", methods=["POST"])
+@ui.route("/tasks")
+@ui.route("/tasks/<int:task_id>/<string:action>")
+@ui.route("/tasks/add", methods=["POST"])
 def tasks(task_id: int = None, action: str = None) -> Response:
     """The tasks page of the webapp
     Args:
@@ -28,30 +30,30 @@ def tasks(task_id: int = None, action: str = None) -> Response:
 
     Returns:
         Response: The tasks page."""
-    if not models.is_db():
+    if not model.is_db():
         return redirect("/")
 
     if task_id and action:
         if action == "done":
-            models.update_task(task_id, not models.get_task(task_id)[3])
+            model.update_task(task_id, not model.get_task(task_id)[3])
             return redirect("/tasks")
         if action == "remove":
-            models.remove_task(task_id)
+            model.remove_task(task_id)
             return redirect("/tasks")
 
     if request.form:
         if "title" in request.form and "end_date" in request.form:
-            models.add_task(
+            model.add_task(
                 request.form["title"], date.fromisoformat(request.form["end_date"])
             )
             return redirect("/tasks")
 
-    tasks_header = [f.name for f in dataclasses.fields(models.Task)]
+    tasks_header = [f.name for f in dataclasses.fields(model.Task)]
 
     tasks_map = list(
         map(
             lambda x: dict(zip(tasks_header, x)),
-            models.tasks_list(),
+            model.tasks_list(),
         )
     )
 
@@ -63,7 +65,7 @@ def tasks(task_id: int = None, action: str = None) -> Response:
     )
 
 
-@app.route("/tasks/edit", methods=["POST"])
+@ui.route("/tasks/edit", methods=["POST"])
 def tasks_edit() -> Response:
     """Edit a task.
     Returns:
@@ -71,17 +73,17 @@ def tasks_edit() -> Response:
     """
     task_id = request.form["task_id"]
 
-    task_obj = models.Task(
+    task_obj = model.Task(
         request.form["task_id"],
         request.form["task"],
         date.fromisoformat(request.form["end_date"]),
         request.form["done"],
     )
-    models.edit_task(task_id, task_obj)
+    model.edit_task(task_id, task_obj)
     return redirect("/tasks")
 
 
-@app.route("/tasks/action", methods=["POST"])
+@ui.route("/tasks/action", methods=["POST"])
 def tasks_action() -> Response:
     """Perform an action on the tasks.
     Returns:
@@ -89,7 +91,7 @@ def tasks_action() -> Response:
     return redirect(f"/tasks/{request.form['action']}", code=307)
 
 
-@app.route("/tasks/download", methods=["POST"])
+@ui.route("/tasks/download", methods=["POST"])
 def tasks_download() -> Response:
     """Download the tasks list.
     Returns:
@@ -102,18 +104,18 @@ def tasks_download() -> Response:
     )
 
 
-@app.route("/tasks/delete", methods=["POST"])
+@ui.route("/tasks/delete", methods=["POST"])
 def tasks_delete() -> Response:
     """Delete the selected tasks.
     Returns:
         Response: A redirect to the tasks page.
     """
     for task in request.form.getlist("tasks"):
-        models.remove_task(int(task))
+        model.remove_task(int(task))
     return redirect("/tasks")
 
 
-@app.route("/tasks/import", methods=["POST"])
+@ui.route("/tasks/import", methods=["POST"])
 def tasks_import() -> Response:
     """Import tasks from a CSV file.
     Returns:
@@ -125,10 +127,10 @@ def tasks_import() -> Response:
     return redirect("/tasks")
 
 
-@app.route("/init")
+@ui.route("/init")
 def init_db() -> Response:
     """Initialize the database.
     Returns:
         Response: A redirect to the index page."""
-    models.create_database()
+    model.create_database()
     return redirect("/")
