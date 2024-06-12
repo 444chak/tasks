@@ -2,14 +2,13 @@
 
 from datetime import date
 import dataclasses
-from flask import render_template, redirect, request, Response, Blueprint
+from flask import render_template, redirect, request, Response, Blueprint, abort, flash
 from models import tasks as model
 from services import csv_manager as services
 
 
-ui = Blueprint("ui", __name__, url_prefix="/ui/")
+ui = Blueprint("ui", __name__, url_prefix="/")
 
-#TODO: Edit all "href="xxx" to "href="{{ url_for('ui.xxx') }}""
 
 @ui.route("/")
 def index() -> Response:
@@ -40,6 +39,7 @@ def tasks(task_id: int = None, action: str = None) -> Response:
         if action == "remove":
             model.remove_task(task_id)
             return redirect("/tasks")
+        return redirect("/tasks")
 
     if request.form:
         if "title" in request.form and "end_date" in request.form:
@@ -123,6 +123,7 @@ def tasks_import() -> Response:
     """
     content = request.files["file"].read().decode("utf-8")
     services.import_tasks(content)
+    abort(401)
 
     return redirect("/tasks")
 
@@ -134,3 +135,10 @@ def init_db() -> Response:
         Response: A redirect to the index page."""
     model.create_database()
     return redirect("/")
+
+@ui.errorhandler(500)
+def internal_error(error: Exception) -> Response:
+    """Handle 500 errors.
+    Returns:
+        Response: A 500 error page."""
+    return redirect("/tasks")

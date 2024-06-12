@@ -42,7 +42,7 @@
                         <td>{{task.id}}</td>
                         <td><input type="text" name="task" value="{{task.task}}" form="edit-task-form"></td>
                         <td><input type="date" name="end_date" value="{{task.end_date.strftime('%Y-%m-%d')}}"
-                                min="{{today}}" form="edit-task-form"></td>
+                                min="{{task.end_date.strftime('%Y-%m-%d')}}" form="edit-task-form"></td>
                         <td>{% if task.done %}Complete{% else %}In progress{% endif %}</td>
                         <td><button type="submit" form="edit-task-form" id="save">Save</button></td>
                     </tr>
@@ -58,16 +58,15 @@
                             {{task.end_date.strftime('%d/%m/%Y')}}
                             <!-- {{task.end_date}} -->
                         </td>
-                        <td class="done" onclick="window.location.href='/tasks/{{task.id}}/done'">
-                            {% if task.done %}Complete{% else %}In progress{% endif %}
+                        <td class="done" onclick=window.location.href="{{url_for('ui.tasks', task_id=task.id, action='done')}}">
+                        {% if task.done %}Complete{% else %}In progress{% endif %}
                         </td>
                         <td class="actions">
-                            <button form="" onclick="
-                                if (confirm('Are you sure you want to delete this task?\nThis action cannot be undone.')) {
-                                window.location.href='/tasks/{{task.id}}/remove'
-                                }
-                                ">Delete</button>
-                            <button form="" onclick="window.location.href='/tasks/{{task.id}}/edit'">Edit</button>
+                            <button form="" onclick='confirmHref("Are you sure you want to delete this task?", 
+                                `{{url_for("ui.tasks", task_id=task.id, action="remove")}}`
+                            )'
+                            >Delete</button>
+                            <button form="" onclick=window.location.href="{{url_for('ui.tasks', task_id=task.id, action='edit')}}">Edit</button>
                         </td>
                     </tr>
                     {% endif %}
@@ -137,5 +136,11 @@
         savebutton.addEventListener('click', () => {
             console.log('clicked');
         });
+    }
+
+    function confirmHref(msg, locationhref) {
+        if (confirm(msg)) {
+            window.location.href = locationhref
+        }
     }
 </script>

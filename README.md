@@ -29,15 +29,7 @@ pdm run tasks
 ```
 
 ### Run web app
-```bash
-pdm run web
-```
+`pdm run web` *OR* `pdn run flask --app views.web run`
 #### With debug mode
 
-```bash
-pdm run webd
-```
-*OR*
-```bash
-pdm run flask --app views --debug run
-```
+`pdm run webd` *OR* `pdm run flask --app views.web --debug run`

@@ -6,8 +6,9 @@ import io
 from dataclasses import dataclass
 import sqlalchemy
 from sqlalchemy import inspect
+from src import config
 
-engine = sqlalchemy.create_engine("sqlite:///database.db")
+engine = sqlalchemy.create_engine(config["DATABASE_URL"], echo=config["DEBUG"])
 metadata = sqlalchemy.MetaData()
 
 

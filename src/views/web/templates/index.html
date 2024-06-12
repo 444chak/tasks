@@ -20,14 +20,14 @@
 
         <p>You can manage your tasks by clicking on the button below.</p>
 
-        <button onclick="window.location.href='/tasks'">View tasks</button>
+        <button onclick=window.location.href="{{url_for('ui.tasks')}}">View tasks</button>
 
         {% else %}
 
         <p>It seems that the database is not initialized.</p>
         <p>Click on the button below to initialize the database.</p>
 
-        <button onclick="window.location.href='/init'">Initialize database</button>
+        <button onclick=window.location.href="{{url_for('ui.init_db')}}">Initialize database</button>
         {% endif %}
 
         <h2>How does it work?</h2>

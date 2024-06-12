@@ -9,6 +9,7 @@ dependencies = [
     "click>=8.1.7",
     "sqlalchemy>=2.0.29",
     "flask>=3.0.3",
+    "flask-wtf>=1.2.1",
 ]
 requires-python = ">=3.11"
 readme = "README.md"
@@ -22,7 +23,9 @@ toudou = "views.cli:cli" # reference to cli() function in the __init__.py file i
 
 
 [tool.pdm.scripts]
-web = "pdm run flask --app views --debug run"
+_.env_file = "dev.env"
+web = "pdm run flask --app views.web run" # Run webapp 
+webd = "pdm run flask --app views.web --debug run" # Run webapp in debug mode
 
 [build-system]
 requires = ["pdm-backend"]
